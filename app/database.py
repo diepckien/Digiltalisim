@@ -20,15 +20,5 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Définition de la classe Base pour les déclarations de modèles
 Base = declarative_base()
 
-# Définition de la classe Commune comme modèle de table SQLAlchemy
-class Commune(Base):
-    __tablename__ = "communes"  # Nom de la table dans la base de données
-
-    # Définition des colonnes de la table
-    code_postal = Column(String(5), primary_key=True, index=True)  # Code postal comme clé primaire
-    nom_commune_complet = Column(String(100))  # Nom complet de la commune
-    code_departement = Column(Integer)  # Code du département
-    nom_departement = Column(String(100))  # Nom du département
-
-# Création de toutes les tables dans la base de données
-Base.metadata.create_all(bind=engine)
+# Importez les modèles pour qu'ils soient enregistrés avec la base
+from app.models import data_model
