@@ -1,8 +1,12 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
+from app.models.response_models import CommuneResponse
 from app.services.commune_service import (add_commune, get_commune_by_name,
+                                          get_communes_by_departement,
                                           update_commune)
 
 router = APIRouter()
@@ -53,7 +57,7 @@ async def update_commune_endpoint(nom_commune_complet: str, code_postal: str = N
         raise HTTPException(status_code=404, detail="Commune not found")
     return {"message": "Commune updated successfully"}
 
-@router.get("/commune/{nom_commune_complet}")
+@router.get("/communes/{nom_commune_complet}")
 async def retrieve_commune(nom_commune_complet: str, db: Session = Depends(get_db)):
     """
     Récupère les informations d'une commune en fonction de son nom complet.
@@ -74,3 +78,20 @@ async def retrieve_commune(nom_commune_complet: str, db: Session = Depends(get_d
         "code_departement": commune.code_departement,
         "nom_departement": commune.nom_departement
     }
+
+@router.get("/communes/departement/{code_departement}", response_model=List[CommuneResponse])
+async def retrieve_communes_by_departement(code_departement: int, db: Session = Depends(get_db)):
+    """
+    Récupère la liste de toutes les communes d'un département.
+
+    Args:
+        code_departement (str): Code du département.
+        db (Session): Session de base de données SQLAlchemy.
+
+    Returns:
+        List[CommuneResponse]: Liste des communes dans le département spécifié.
+    """
+    communes = get_communes_by_departement(db, code_departement)
+    if not communes:
+        raise HTTPException(status_code=404, detail="No communes found for the given department")
+    return communes

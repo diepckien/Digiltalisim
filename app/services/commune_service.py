@@ -62,3 +62,17 @@ def get_commune_by_name(db: Session, nom_commune_complet: str):
     """
     commune = db.query(Commune).filter(Commune.nom_commune_complet == nom_commune_complet).first()
     return commune
+
+def get_communes_by_departement(db: Session, code_departement: int):
+    """
+    Récupère toutes les communes d'un département.
+
+    Args:
+        db (Session): Session de base de données SQLAlchemy.
+        code_departement (int): Code du département.
+
+    Returns:
+        List[Commune]: Liste des communes dans le département spécifié.
+    """
+    communes = db.query(Commune).filter(Commune.code_departement == code_departement).all()
+    return communes
