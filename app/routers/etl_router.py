@@ -18,6 +18,17 @@ def get_db():
 
 @router.post("/run-etl/")
 async def run_etl(db: Session = Depends(get_db)):
+    """
+    Extraction des données via l'URL:
+    https://www.data.gouv.fr/fr/datasets/r/dbe8a621-a9c4-4bc3-9cae-be1699c5ff25
+
+    Transformer les noms des communes en MAJ
+
+    Charger les codes postaux et les noms des communes dans la BD
+
+    Returns:
+        dict: Message de succès.
+    """
     # URL du fichier CSV
     url = "https://www.data.gouv.fr/fr/datasets/r/dbe8a621-a9c4-4bc3-9cae-be1699c5ff25"
     
