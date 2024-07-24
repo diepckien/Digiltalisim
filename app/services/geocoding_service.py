@@ -1,10 +1,11 @@
-import requests  # Importation de la bibliothèque requests pour effectuer des requêtes HTTP
+import os
+
+import requests
 
 
 def get_coordinates(city_name: str):
-    # Définir l'URL de l'API de géocodage
-    url = 'http://localhost:8080/search'
-    
+    # Lire l'URL de l'API de géocodage
+    url = os.getenv("NOMINATIM_URL")
     # Définir les paramètres de la requête
     params = {
         'q': city_name,  # Nom de la ville à rechercher
