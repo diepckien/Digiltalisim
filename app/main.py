@@ -1,10 +1,14 @@
-from fastapi import FastAPI  # Importation de la classe FastAPI depuis FastAPI
+from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.routers import (  # Importation des routeurs définis dans le projet
     etl_router, geocoding_router, methode_router)
 
 # Création d'une instance de l'application FastAPI
 app = FastAPI()
+
+# Expose les metrics de l application pour Prometheus
+Instrumentator().instrument(app).expose(app, endpoint="/metrics", tags=["METRICS"])
 
 # Inclure les routeurs
 app.include_router(etl_router.router, prefix="/etl", tags=["ETL"])

@@ -5,3 +5,4 @@ sqlalchemy
 pymysql
 pytest
 pytest-asyncio
+prometheus_fastapi_instrumentator

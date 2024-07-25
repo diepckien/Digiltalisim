@@ -1,6 +1,9 @@
 # Use the official PyTorch base image
 FROM python:3.9-slim
 
+# Create a non-root user and group
+RUN groupadd -r appgroup && useradd -r -g appgroup -m appuser
+
 # Set the working directory inside the container
 
 RUN mkdir /digitalisim
@@ -22,11 +25,17 @@ RUN apt-get update && \
 COPY /app /digitalisim/app
 COPY wait-for-it.sh /digitalisim/
 
-# Expose the app's port
+# Set permissions to allow the non-root user to access the working directory
+RUN chown -R appuser:appgroup /digitalisim
 
+# Set environment variables
 ENV PYTHONPATH "${PYTHONPATH}:/digitalisim"
 
+# Expose the app's port
 EXPOSE 8000
+
+# Switch to the non-root user
+USER appuser
 
 # Start the FastAPI server
 CMD ["./wait-for-it.sh", "db:3306", "uvicorn", "app.main:app", "--host", "0.0.0.0","--port", "8000"]
